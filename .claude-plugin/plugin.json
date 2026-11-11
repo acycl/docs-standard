@@ -1,0 +1,10 @@
+{
+  "name": "docs-standard",
+  "description": "Teaches Claude the Acycl documentation standard: how to lay out and write a project's docs/ so they read well on GitHub and render on acycl.dev",
+  "author": {
+    "name": "acycl"
+  },
+  "homepage": "https://github.com/acycl/docs-standard",
+  "repository": "https://github.com/acycl/docs-standard",
+  "keywords": ["documentation", "markdown", "docs-as-code"]
+}

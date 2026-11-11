@@ -1,0 +1,14 @@
+{
+  "name": "docs-standard",
+  "description": "Claude Code integration for the Acycl documentation standard",
+  "owner": {
+    "name": "acycl"
+  },
+  "plugins": [
+    {
+      "name": "docs-standard",
+      "source": "./",
+      "description": "Teaches Claude the Acycl documentation standard: how to lay out and write a project's docs/ so they read well on GitHub and render on acycl.dev"
+    }
+  ]
+}
