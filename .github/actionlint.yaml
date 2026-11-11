@@ -1,0 +1,10 @@
+# actionlint configuration for this repository's workflows.
+paths:
+  .github/workflows/docs.yml:
+    ignore:
+      # job.workflow_repository and job.workflow_sha identify the reusable
+      # workflow's own source. GitHub added them in September 2026
+      # (https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#job-context);
+      # actionlint 1.7.12 does not know them yet. Remove this entry once
+      # actionlint does.
+      - 'property "workflow_(repository|sha)" is not defined in object type'
