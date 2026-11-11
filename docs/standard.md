@@ -52,7 +52,7 @@ repository's working tree, without ever committing them to it.
 ````
 
 | In the index | On the site |
-|---|---|
+| --- | --- |
 | The `# Heading` | The home page's title |
 | The paragraph right after it | The tagline under the title, as plain text |
 | A list of `- [Title](page.md) — summary` items | A grid of cards, one per page |
@@ -106,7 +106,7 @@ an aside.
 ```
 
 | Marker | Aside on the site |
-|---|---|
+| --- | --- |
 | `[!NOTE]` | Note |
 | `[!TIP]` | Tip |
 | `[!IMPORTANT]` | Note, titled "Important" |
@@ -166,7 +166,7 @@ nest, and put an optional comment after the name. The
 ### Links
 
 | Link | On the site |
-|---|---|
+| --- | --- |
 | Relative, to a page in `docs/`, with or without a fragment | The page's route on the site |
 | Relative, to any other file or directory in the repository | That path on GitHub, at the release tag the site is built from |
 | A fragment on its own, such as `#layout` | Unchanged |
@@ -239,7 +239,7 @@ The site publishes released documentation. Each project has an entry in
 ## Checks
 
 | Check | Catches | Runs |
-|---|---|---|
+| --- | --- | --- |
 | markdownlint, with this repository's configuration | Raw HTML, a missing or repeated title, fences without a language, broken fragments within a page, long lines | In the project's CI, through the [shared workflow](adopting.md) |
 | lychee | Relative links to missing files and headings | In the project's CI, through the shared workflow |
 | The site's converter | Everything on this page that fails the site build | When the site builds, and locally in a checkout of `acycl/acycl-web` |
