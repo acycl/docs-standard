@@ -1,0 +1,21 @@
+// markdownlint-cli2 configuration for documentation that follows the Acycl
+// documentation standard (docs/standard.md). The shared workflow passes
+// this file as the base configuration when it lints a project's docs; a
+// project's own .markdownlint-cli2.jsonc is applied on top of it.
+{
+  "config": {
+    "default": true,
+    // "#" headings and "-" bullets, as the index's page lists are written.
+    "MD003": { "style": "atx" },
+    "MD004": { "style": "dash" },
+    // Prose wraps at 80 columns; tables and code cannot.
+    "MD013": { "line_length": 80, "tables": false, "code_blocks": false },
+    // The same heading may repeat under different parents.
+    "MD024": { "siblings_only": true },
+    // The site refuses raw HTML, so no element is allowed.
+    "MD033": { "allowed_elements": [] },
+    "MD046": { "style": "fenced" },
+    "MD048": { "style": "backtick" }
+  },
+  "noBanner": true
+}
