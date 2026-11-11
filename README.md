@@ -12,6 +12,9 @@ It holds:
 - a shared [markdownlint configuration](.markdownlint-cli2.jsonc);
 - a [reusable workflow](.github/workflows/docs.yml) that checks a
   project's docs in CI;
+- the [converter](converter/) that turns a project's docs into the site's
+  pages, as a Node package, and a conformance check that runs it on a
+  project's docs;
 - a Claude Code plugin whose [skill](skills/docs-standard/SKILL.md)
   applies the standard when Claude writes or reviews docs.
 
@@ -23,7 +26,7 @@ the workflow:
 ```yaml
 jobs:
   docs:
-    uses: acycl/docs-standard/.github/workflows/docs.yml@v0.1.0
+    uses: acycl/docs-standard/.github/workflows/docs.yml@v0.2.0
 ```
 
 and install the plugin:

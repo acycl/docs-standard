@@ -54,12 +54,14 @@ repository's working tree, without ever committing them to it.
 | In the index | On the site |
 | --- | --- |
 | The `# Heading` | The home page's title |
-| The paragraph right after it | The tagline under the title, as plain text |
+| The paragraph right after it | The tagline under the title, as plain text, and the home page's description |
 | A list of `- [Title](page.md) — summary` items | A grid of cards, one per page |
 | The `##` heading above a list | The name of that group in the sidebar |
 | The order of the lists and their items | The order of the sidebar, and of the previous and next links |
 | The first page listed | The target of the "Get started" button |
 
+- The index needs the paragraph after its title, as every page needs its
+  description.
 - Every item of a page list is one link to a page in `docs/`, optionally
   followed by a separator and a summary. The separator is an em dash, an
   en dash, a hyphen or a colon.
@@ -86,8 +88,9 @@ Guards stop a private file from reaching the host repository's history.
   only level-one heading on the page.
 - The paragraph right after the title is the page's description, shown
   in search results and link previews. Write one or two sentences that
-  make sense on their own. If anything other than a paragraph follows the
-  title, the page has no description.
+  make sense on their own. Every page needs one: a page whose title is
+  followed by anything other than a paragraph, even a comment, fails the
+  [check](#checks).
 - `##` and `###` headings form the page's table of contents.
 
 ## Syntax
@@ -120,6 +123,20 @@ Any other marker fails the site build.
 An ordered list becomes a numbered procedure when any of its items holds
 a code block. Write procedures as ordered lists, with each command in a
 fence inside its step.
+
+### Code blocks
+
+Fence every code block with backticks and name its language after the
+opening fence. Use `text` for anything that is not code in a language,
+such as a program's output or a command's synopsis.
+
+````markdown
+```text
+git inlay clone <url> [<name>] [--no-hooks]
+```
+````
+
+markdownlint rejects a fence without a language (MD040).
 
 ### Tabs
 
@@ -163,6 +180,20 @@ A `tree` fence becomes a file tree. Write one path per line, indent to
 nest, and put an optional comment after the name. The
 [layout](#layout) above is one.
 
+### Tables
+
+Put a space on each side of every cell, the delimiter row included, so
+that it reads `| --- | --- |`. The columns need not line up.
+
+```markdown
+| Marker | Aside on the site |
+| --- | --- |
+| `[!NOTE]` | Note |
+```
+
+markdownlint rejects a table that mixes styles, such as padded cells
+over a delimiter row written `|---|---|` (MD060).
+
 ### Links
 
 | Link | On the site |
@@ -176,7 +207,10 @@ nest, and put an optional comment after the name. The
 - A relative link to a path that does not exist, or that leaves the
   repository, fails the site build.
 - Do not start a link with `/`. GitHub reads it from the repository root
-  and the site reads it from the site root.
+  and the site reads it from the site root, so such a link fails the
+  check.
+- A link to `localhost` or `127.0.0.1` fails the site build, and GitHub
+  makes a link of a bare URL in prose. Put such an address in backticks.
 - Fragments follow GitHub's heading anchors: lowercase, spaces as
   hyphens, punctuation dropped.
 
@@ -238,12 +272,43 @@ The site publishes released documentation. Each project has an entry in
 
 ## Checks
 
-| Check | Catches | Runs |
-| --- | --- | --- |
-| markdownlint, with this repository's configuration | Raw HTML, a missing or repeated title, fences without a language, broken fragments within a page, long lines | In the project's CI, through the [shared workflow](adopting.md) |
-| lychee | Relative links to missing files and headings | In the project's CI, through the shared workflow |
-| The site's converter | Everything on this page that fails the site build | When the site builds, and locally in a checkout of `acycl/acycl-web` |
+The [shared workflow](adopting.md) runs three checks on a project's
+docs in its CI, and each also runs
+[locally](adopting.md#check-docs-locally).
+
+| Check | Catches |
+| --- | --- |
+| markdownlint, with this repository's configuration | Raw HTML, a missing or repeated title, fences without a language, tables that mix padded and unpadded rows, broken fragments within a page, long lines |
+| lychee | Relative links to missing files and headings |
+| The conformance check | Everything else on this page that fails the site build, and a page without a description |
+
+The conformance check converts every page in the docs directory as the
+site does, and writes nothing. It reports every problem it finds, each
+with the file it is in. Its code is in [`converter/`](../converter/).
+Once the pages are converted, the site build also refuses a link to a
+heading that does not exist, which is why lychee runs too.
 
 To preview a project's docs on the site before a release, check out
 `acycl/acycl-web` beside the project and run `npm run dev` there. It reads
 the project's working tree.
+
+### Exempting a line
+
+A line that cannot follow a lint rule can be exempted from that rule. A
+heading, for one, cannot wrap, and shortening it changes its anchor and
+breaks the links to it. Turn the rule off just before the line and on
+again just after it, with a blank line on each side of the line:
+
+````markdown
+<!-- markdownlint-disable MD013 -->
+
+### `inlay <name> has uncommitted changes`, `has N stash(es)`, `has N commit(s) on no remote`
+
+<!-- markdownlint-enable MD013 -->
+````
+
+GitHub hides the comments and the site leaves them out. Name only the
+rule the line breaks. The title and the description cannot be exempted,
+because nothing may come before the title or between it and the
+description. The conformance check has no exemptions: a rule the site
+enforces, such as the ban on raw HTML, holds whatever the linter allows.
