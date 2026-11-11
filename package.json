@@ -27,7 +27,7 @@
     "check": "node converter/check.mjs . docs",
     "test": "node --test \"converter/*.test.mjs\"",
     "typecheck": "tsc",
-    "types": "tsc -p tsconfig.types.json"
+    "types": "node --eval \"require('node:fs').rmSync('types', { recursive: true, force: true })\" && tsc -p tsconfig.types.json"
   },
   "dependencies": {
     "mdast-util-to-string": "4.0.0",

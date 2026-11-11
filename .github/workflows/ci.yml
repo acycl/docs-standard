@@ -36,6 +36,7 @@ jobs:
           npm run types
           if [ -n "$(git status --porcelain -- types)" ]; then
             git status --porcelain -- types
+            git diff -- types
             echo "::error::types/ is out of date; run npm run types and commit the result"
             exit 1
           fi
