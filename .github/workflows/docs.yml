@@ -1,0 +1,51 @@
+name: docs
+
+# Checks a project's documentation against the Acycl documentation
+# standard. A project calls this workflow from its own:
+#
+#   jobs:
+#     docs:
+#       uses: acycl/docs-standard/.github/workflows/docs.yml@<tag>
+on:
+  workflow_call:
+    inputs:
+      docs:
+        description: Docs directory, relative to the repository root.
+        type: string
+        default: docs
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the project
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The lint configuration lives beside this workflow, so read it from
+      # the same commit of the standard that the caller pinned. The github
+      # context names the caller; the job context names this workflow.
+      - name: Check out the standard
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .docs-standard
+
+      # Pages sit directly in the docs directory; the site reads no
+      # subdirectories.
+      - name: Lint Markdown
+        uses: DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34 # v25.0.0
+        with:
+          config: .docs-standard/.markdownlint-cli2.jsonc
+          globs: ${{ inputs.docs }}/*.md
+
+      # Offline: only relative links, to files in the repository and to
+      # headings in them.
+      - name: Check relative links
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --offline --include-fragments --no-progress '${{ inputs.docs }}/*.md'
+          fail: true
