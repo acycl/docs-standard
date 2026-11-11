@@ -28,11 +28,15 @@ jobs:
       # the same commit of the standard that the caller pinned. The github
       # context names the caller; the job context names this workflow.
       - name: Check out the standard
+        id: standard
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: ${{ job.workflow_repository }}
           ref: ${{ job.workflow_sha }}
           path: .docs-standard
+
+      # Each step below runs even when a check before it fails, so one run
+      # reports every problem.
 
       # Pages sit directly in the docs directory; the site reads no
       # subdirectories.
@@ -45,7 +49,33 @@ jobs:
       # Offline: only relative links, to files in the repository and to
       # headings in them.
       - name: Check relative links
+        if: ${{ !cancelled() && steps.standard.outcome == 'success' }}
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           args: --offline --include-fragments --no-progress '${{ inputs.docs }}/*.md'
           fail: true
+
+      - name: Set up Node
+        id: node
+        if: ${{ !cancelled() && steps.standard.outcome == 'success' }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .docs-standard/.nvmrc
+          # The project's own package.json must not turn on a dependency
+          # cache that this job never fills.
+          package-manager-cache: false
+
+      - name: Install the site's converter
+        id: install
+        if: ${{ !cancelled() && steps.node.outcome == 'success' }}
+        working-directory: .docs-standard
+        run: npm ci --omit=dev --ignore-scripts
+
+      # Converts every page as the site does, writing nothing, and fails
+      # on whatever the site would refuse, such as an unlisted page, and
+      # on a page without a description.
+      - name: Check pages convert for the site
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        env:
+          DOCS: ${{ inputs.docs }}
+        run: node .docs-standard/converter/check.mjs . "$DOCS"

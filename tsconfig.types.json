@@ -1,0 +1,14 @@
+{
+  // Writes the type declarations the package ships in types/, from the
+  // JSDoc in the modules it exports. Run `npm run types` after changing
+  // them and commit the result; CI fails if types/ is out of date.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "converter",
+    "declarationDir": "types"
+  },
+  "include": ["converter/index.mjs"]
+}

@@ -1,0 +1,15 @@
+{
+  // Type-checks the converter's JSDoc-annotated JavaScript; nothing is
+  // compiled.
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "target": "esnext",
+    "module": "nodenext",
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["converter"]
+}

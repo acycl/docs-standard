@@ -1,0 +1,44 @@
+{
+  "name": "@acycl/docs-standard",
+  "version": "0.2.0",
+  "description": "The converter acycl.dev runs on a project's docs, and a check that a project's docs pass it",
+  "license": "Apache-2.0",
+  "private": true,
+  "repository": "github:acycl/docs-standard",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.mts",
+      "default": "./converter/index.mjs"
+    }
+  },
+  "bin": {
+    "docs-standard-check": "converter/check.mjs"
+  },
+  "files": [
+    "converter/*.mjs",
+    "!converter/*.test.mjs",
+    "types/*.d.mts"
+  ],
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "check": "node converter/check.mjs . docs",
+    "test": "node --test \"converter/*.test.mjs\"",
+    "typecheck": "tsc",
+    "types": "tsc -p tsconfig.types.json"
+  },
+  "dependencies": {
+    "mdast-util-to-string": "4.0.0",
+    "remark-gfm": "4.0.1",
+    "remark-mdx": "3.1.1",
+    "remark-parse": "11.0.0",
+    "remark-stringify": "11.0.0",
+    "unified": "11.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "typescript": "6.0.3"
+  }
+}
