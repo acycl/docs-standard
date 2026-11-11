@@ -1,7 +1,7 @@
 {
   "name": "docs-standard",
   "description": "Teaches Claude the Acycl documentation standard: how to lay out and write a project's docs/ so they read well on GitHub and render on acycl.dev",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "Apache-2.0",
   "author": {
     "name": "acycl"
