@@ -1,16 +1,7 @@
-/**
- * Converts the index and every page of a docs directory.
- *
- * @param {DocsSource} source
- * @returns {ConvertedDocs}
- */
-export function convertDocs(source: DocsSource): ConvertedDocs;
+import { DocsError } from "./transform.mjs";
 export type ConvertedIndex = import("./transform.mjs").ConvertedIndex;
 export type ConvertedPage = import("./transform.mjs").ConvertedPage;
 export type PageContext = import("./transform.mjs").PageContext;
-/**
- * A project's docs directory and where the site publishes it.
- */
 export type DocsSource = {
     /**
      * Repository directory on disk.
@@ -35,9 +26,6 @@ export type DocsSource = {
      */
     ref: string;
 };
-/**
- * A docs directory converted to MDX.
- */
 export type ConvertedDocs = {
     /**
      * The index, unless it is
@@ -56,4 +44,10 @@ export type ConvertedDocs = {
      */
     errors: DocsError[];
 };
-import { DocsError } from "./transform.mjs";
+/**
+ * Converts the index and every page of a docs directory.
+ *
+ * @param {DocsSource} source
+ * @returns {ConvertedDocs}
+ */
+export declare function convertDocs(source: DocsSource): ConvertedDocs;
